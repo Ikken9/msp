@@ -114,7 +114,7 @@ pub fn get_shortest_path(state: State<Arc<Mutex<Router>>>, start: NodeId, target
 pub fn route_packet(router_state: State<Arc<Mutex<Router>>>, graph_state: State<Arc<Mutex<Graph>>>, start: NodeId, target: NodeId) -> SerializablePath {
     let router = router_state.lock().unwrap();
 
-    if let Ok(path) = router.route_packet(&start, &target, graph_state) {
+    if let Ok(path) = router.route_packet_v2(&start, &target, graph_state) {
         return SerializablePath { path, cost: 0 }
     }
 
