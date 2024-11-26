@@ -72,9 +72,13 @@ pub fn add_node(state: State<Arc<Mutex<Graph>>>, id: NodeId) -> Result<(), Strin
 }
 
 #[tauri::command]
-pub fn add_edge(state: State<Arc<Mutex<Graph>>>, source: NodeId, target: NodeId, cost: u32) -> Result<(), String> {
-    let mut graph = state.lock().unwrap();
-    graph.add_edge(source, target, cost)
+pub fn add_edge(router_state: State<Arc<Mutex<Router>>>, graph_state: State<Arc<Mutex<Graph>>>, source: NodeId, target: NodeId, cost: u32) -> Result<(), String> {
+    let mut graph = graph_state.lock().unwrap();
+    graph.add_edge(source, target, cost).expect("Failed to add edge");
+
+    let mut router = router_state.lock().unwrap();
+    router.routes = graph.floyd_warshall_map();
+    Ok(())
 }
 
 #[tauri::command]

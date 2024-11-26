@@ -173,7 +173,7 @@ impl Graph {
                 let edges = self.edges
                     .iter()
                     .filter(|&((source, _), _)|source.eq(&v.id.to_string()))
-                    .map(|((source, target), edge)| edge);
+                    .map(|((_, target), edge)| edge);
 
                 for edge in edges {
                     if let Some(next) = self.nodes.get(&edge.target) {
