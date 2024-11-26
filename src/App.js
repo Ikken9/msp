@@ -304,8 +304,6 @@ const App = () => {
                             console.warn(`Edge with ID ${edgeId} not found.`);
                         }
                     });
-
-                    alert(`Packet routed successfully`);
                 } else {
                     alert("No available path found!");
                 }
@@ -351,7 +349,7 @@ const App = () => {
                 <button onClick={removeNode}>Remove Node</button>
                 <button onClick={addEdge}>Add Edge</button>
                 <button onClick={removeEdge}>Remove Edge</button>
-                <button onClick={findShortestPath}>Find Shortest Path</button>
+                {/*<button onClick={findShortestPath}>Find Shortest Path</button>*/}
                 <button onClick={routePacket}>Route Packet</button>
                 <button onClick={resetGraph}>Reset Graph</button>
             </div>
