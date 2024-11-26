@@ -1,7 +1,6 @@
 use std::collections::{HashMap, HashSet};
 use serde::Serialize;
 use std::sync::{Arc, Mutex};
-use log::info;
 use tauri::State;
 use crate::graph::edge::Edge;
 use crate::graph::graph::Graph;
@@ -88,9 +87,13 @@ pub fn remove_node(state: State<Arc<Mutex<Graph>>>, id: NodeId) -> Result<(), St
 }
 
 #[tauri::command]
-pub fn remove_edge(state: State<Arc<Mutex<Graph>>>, source: NodeId, target: NodeId) -> Result<(), String> {
-    let mut graph = state.lock().unwrap();
-    graph.remove_edge(source, target)
+pub fn remove_edge(router_state: State<Arc<Mutex<Router>>>, graph_state: State<Arc<Mutex<Graph>>>, source: NodeId, target: NodeId) -> Result<(), String> {
+    let mut graph = graph_state.lock().unwrap();
+    graph.remove_edge(source, target).expect("Failed to add edge");
+
+    let mut router = router_state.lock().unwrap();
+    router.routes = graph.floyd_warshall_map();
+    Ok(())
 }
 
 #[tauri::command]
@@ -113,7 +116,6 @@ pub fn get_shortest_path(state: State<Arc<Mutex<Router>>>, start: NodeId, target
 #[tauri::command]
 pub fn route_packet(router_state: State<Arc<Mutex<Router>>>, graph_state: State<Arc<Mutex<Graph>>>, start: NodeId, target: NodeId) -> SerializablePath {
     let router = router_state.lock().unwrap();
-
     if let Ok(path) = router.route_packet_v2(&start, &target, graph_state) {
         return SerializablePath { path, cost: 0 }
     }
