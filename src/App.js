@@ -304,8 +304,6 @@ const App = () => {
                             console.warn(`Edge with ID ${edgeId} not found.`);
                         }
                     });
-
-                    alert(`Packet routed successfully`);
                 } else {
                     alert("No available path found!");
                 }
